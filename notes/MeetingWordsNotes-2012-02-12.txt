@@ -1,0 +1,551 @@
+Node PDX 2012
+Date: 2012/2/11
+http://nodepdx.github.com/
+
+Saturday Morning. 
+
+Organizers: 
+ * Troy Howard - welcome
+ * Adrian Hall - http://nodepdx.github.com/sponsors
+
+Live streaming at http://livestream.com/nodepdx
+Twitter hash is #nodepdx
+
+John Sechrest is telling us about this space to take notes on... (but if you see this, you already knew that!)
+
+
+Back again...
+
+
+NodeJS, CouchDB, Neo4j, Redis, Coffee script, buzzword Sectacular!
+
+@coderoshi - 
+
+Instead - NCNRCSBuzzSpec
+
+Who is Me? 
+Eric Redmond
+@coderoshi
+github.com/coderoshi
+
+
+Run All the Things - New frame work.
+
+Follow along at: 
+http://github.com/coderoshi/NCNRCSBuzzStpec
+
+
+NodeJS
+
+Simple and Powerful and has taken off so very quickly. 
+
+Worlds shortest NodeJS Primer
+ * Javascript-based reactor pattern with built-in tools like HTTP stuff
+ * The reason you are here (probably) 
+
+
+
+CouchDB 
+
+Worlds shortest CouchDB Primer
+ * Document datastore (like MongoDB) 
+ * everything stored as JSON
+ * interface thrue HTTP REST
+ * Master/Master Replications   -> Sync 
+
+Neo4j Primer
+
+ * Graph Database
+ * Everhting is a node or an edge
+ * Nodes can have many edges connecting other nodes
+ * Query by "walking" the graph from node to node
+ * Support ACID Transactions, and up to 34B nodes and 34B edges
+
+
+Redis
+
+Key/Value Database
+All values are keyed with some unique string
+Super fast
+ * 100,000 write/sec
+ * 80,000 reads/sec
+ * support complex datatypes (Lists, Hashes, sets and SortedSets)
+ * Can do cool things like unions with sets 
+
+CoffeeScript
+ * REmove all {}, indent blocks instea on newlines
+ * remove var keywords
+ * strings interpolate vars withing #{}
+ * Replace all "Funcitons(args...)"s with "(args....)->
+
+
+
+Battle Plan 
+
+ * Has a dataset of bands and memers of the band
+ * 
+   * 
+ * Transform data in Redis
+   * Band: The Beattles => (set of members)
+   * artist: The Beatles:John Lennon => (Set of roles)
+ * populate couchDB
+   * {name: "NIN", artists: [ name:"Trent",roles: ["Sing",...],...
+ * Keep couchdb and Neo4j in Sync
+   * Artist nodes connected to band and role nodes
+   * Makes searching on roles easy 
+ * Web Interface 
+
+CouchDB is not really great for comparing things in the database. It is not relational. 
+
+Graph database is a great way for tracking relationships.
+
+Polyglot persitant systems.
+
+Makes some people nervous, but even a key/value + memcache is already that. 
+
+Redis is a front-end cache for the system. 
+
+
+---- 
+
+Launch Redis + couchdb
+
+
+
+pre_populate.coffee
+
+---------------
+csv=require ('csv')
+redisClient = require('redis').createClient()
+log = counsole.log
+
+processedLines = 0
+
+trackLIneCount = ->
+  if ++preocessedLines % 1000 ==0
+       log "Lines processed #{processedLines}"
+       
+populateRedis = ->
+      file = csv().fromPath('group_membership.tsv',
+             delimiter : '\t' , quote: '' )
+             
+      file.on 'data', (data,index) -> 
+             artist = data[2]
+             band = data[3]
+             
+             return trackLIneCount() if band == '' or  artist == ''
+             
+             roles = data [4].split ','
+             roles = [] if roles.length == 1 and role[0] == ''
+             
+             redisClient.sadd "band:#{band}",artist 
+             role.forEach (role) ->
+                 redisClient.sadd("artist:#{band}:#{artist}")
+                 
+             trackLineCount()
+             
+        file.on 'end', (total_lines) ->
+             redistClient.quit()
+        
+             
+            
+populateRedis()
+
+For other code - get the GIT repository - https://github.com/coderoshi/NCNRCSBuzzSpec.git
+
+
+Notes of new/interesting ideas:
+
+Note: exports.X = X is a way to create access to a method across files
+
+Use 
+request.ed JSON.stringify(docs: docs)
+
+ to put data into the body of the document 
+
+
+Easy to create a database in couchdb. Just put at the root of the database with the name. 
+
+Use Batching of requests together as a way to reduce the cost of network latency
+
+Couchdb has a limit of batching 50 things at a time.
+
+
+populateBands() if (!module.parent) 
+as a way to  allow for inclusion vs running code. 
+
+If you have one main function per script.
+
+If you want to use neo4j and nodejs, don't use the driver , but use the one off this website. the old driver does not work on edgecases. 
+
+Nodejs is fast, but it is kind of time at times. It can run out of sockets if you run to the end of sockets. Need to throttle connects for nodejs inside your app. 
+
+Couch has a changes api , which is rediculously useful. 
+
+When couch is changed, use this api to notify  Neo4JS  and Redis
+
+Whenever you do a polyglot system, you always need a system that is the system of record. This is where you put the OFFICIAL copy that is the gold standard of where to store the data. 
+
+The goal for Redis it to support the autocomplete for the webpages. 
+The goal for Neo4js is to get easy access to relations
+
+
+Uses an template page for html pages. 
+
+Using gremlin to structure queries. 
+
+There is a new query language called cipher -> graph traversal language influenced by Sparkle
+
+
+Neo4j / Nodejs polyglot live coding brings to mind server side collections beats client-side. [Anyone doing client side?]  
+
+
+Neo4js is difficult to do classification and so couchdb makes a better database of record. 
+
+Redis is an in memory database. 
+http://redis.io/
+
+Redis is an open source, advanced key-value store. It is often referred to as a data structure server since keys can containstrings, hashes, lists, sets and sorted sets.
+
+Neo4js
+http://neo4j.org/
+
+https://github.com/neo4j/neo4js
+
+--- Break ----
+
+Building Applications with  Bricks.js
+
+
+http://github.com/JerrySievert/nodepdx-bricksjs.git
+
+git:github.com/JerrySievert/nodepdx-bricksjs.git
+
+
+Routes 
+Function vs Plugin 
+
+Matching is Easy
+
+ * Regular Expressions
+ * Functions
+ * Custom Routing
+
+Today we are writing a wiki
+
+Plugins in Action. 
+
+Anatomy of a Plug-in 
+
+
+Getting Bricks.j
+
+npm install bricks -g 
+
+http://bricksjs.com
+
+Let's create a Wiki
+
+ * Git clone the git hub
+ * backend - Node.js + MongoDB
+ * Frontend - HTML
+ * 
+
+@JerrySievert on Twitter
+
+http://github.com/JerrySievert
+http://Legitimatesounding.com
+
+
+Use NPM to set up your package.JSON file 
+
+
+Using 
+ * Bricks            - http://bricksjs.com/index.html
+ * marked          - https://github.com/chjj/marked
+ * mongoskin     - https://github.com/guileen/node-mongoskin
+ * handlebars      - http://handlebarsjs.com/
+
+Semantic Versioning - Semver.org
+
+Settings Json file - List of routes
+ * Database
+ * Collection
+ * edit
+ * save
+ * page
+
+npm install bricks
+
+node server.js
+
+
+var bricks = require('bricks'),
+    settings = require('./settings.json');
+    
+    var appServer = new bricks.appserver();
+    
+   
+    appServer.addRoute(".+", appServer.plugins.filehandler, {basedir: "./htdocs"});
+    appServer.addRoute(".+",appServer.plugins.fourohfour);
+    
+      appServer.addRoute(settings.edit,wikiHandler, { "some" : "stuff" });
+      appServer.addRoute(settings.save,wikiHandler, { "some" : "more" });
+      appServer.addRoute(settings.page,wikiHandler, { "some" : "more stuff" });
+       
+       ....
+    
+    Var server = appServer.createServer();
+    
+...
+
+Writting function to process wiki pages on the fly...
+
+
+http://mongohq.com
+
+Gives a web interface to engage with a database
+
+About 1/2 of the audiience has used MongoDB before. 
+
+
+data = data || { } 
+
+---- Ran into the wall. Out of time --- Hard to code live ----
+
+See https://github.com/JerrySievert/nodepdx-bricksjs
+
+Object Oriented patterns in Javascript by 
+Jesse  Hallett - @hallettj
+http://sitr.us/
+
+
+
+http://compositecode.com/2012/01/19/jesse-hallett-to-present-object-oriented-patterns-in-javascript-nodepdx/
+
+
+--- Traits.js
+How to use traits to make better code in Smalltalk.
+This is set of methods you can add on to an object. 
+
+http://howtonode.org/traitsjs
+http://ajaxian.com/archives/traits-js-new-trait-composition-library
+
+---
+
+seperate the namespaces and now we have solved the Name collision problem, but now we have broken Polymorphism.
+
+What about Polymorphism?
+
+
+ettiquette.js
+b3gl: Etiquette.js -- An interesting attempt to bring protocols to JS.https://t.co/cBxWlACG #nodePDX
+
+---
+
+http://sitr.us/talks/oo-patterns/
+
+
+
+---
+
+Ward Cunningham 
+Federation of Wikis
+
+
+Wiki should not be all bound to one wiki.
+
+Looking for a distributed wiki methodology
+
+Single page application that can have multiple wiki pages from multiple pages, that are derived from each other. Sharing by copying.
+
+Has a node.js express version that runs 
+
+Currently a sinatra version by Ward.
+
+
+@wardCunningham.
+
+In 1997 wrote a paper for a minimalist federated Object server. 
+
+Needed a better technology. Needed it to be safe. Need the ability to do sandboxes. 
+
+---- 
+
+Limits to growth for the use of the wiki. 
+
+Agile methods came out of the Programming Patterns material on the C2 Wiki
+
+Limits to growth
+ * Population
+ * Energy
+ * Climate
+
+Any time you have exponential growth, you are going to hit a limit.
+
+See a book called - The limits of growth. 
+
+2005 - 2015 was the prediction by the Club of Rome for when things would hit the inflection point. 
+
+Folk Memory - Copy content over servers. 
+
+Need to get to a New Framing 
+
+A single page application, that handle multiple wiki pages, and which uses copying  and journaling. 
+
+"Git Hub meets wikipedia" 
+
+Need to have Creative Commons agreements - share alike to carry the content.
+
+Smallest federated wiki
+
+https://github.com/WardCunningham/Smallest-Federated-Wiki
+http://c2.com/cgi/wiki?SmallestFederatedWiki
+
+
+Make the F for Fork a complement to engage in the content across systems.
+
+
+D3 Line
+
+D3.js
+
+Uses HTML5 Local Storage
+
+Roles
+ * Data Nerd
+ * Manager
+ * System Administrator
+ * 
+ * Community manager
+
+Leadership 
+Community
+Technology
+
+GitHub has transformed how I think about sharing. 
+
+Allen Wirfs-brock - u
+
+Faster instead of Better. 
+
+Totally skips the taxonomy / ontology
+
+-"Node is the furture of the server side"
+
+
+
+---
+ql.io
+
+Subbu Allamaraju
+@sallamar
+http://www.subbu.org
+http://ql.io/
+
+Works for Ebay 
+https://github.com/s3u/ql.io
+
+
+
+Most clients need to make more than one request for user interaction.
+
+Can we optimize the producers for every consumer?
+
+Many companies like Netflicks are optimizing the process of collecting data. 
+
+This is fun the first time.. After a while it is not fun.
+
+Tasks
+ * Parallellizing
+ * Sequencing
+ * Joining
+ * Normalizing
+
+
+Bad for Far away clients
+
+Make it easy and fast to consume HTTP
+
+Reduce lines of code you need to write
+reduce bandwidth.
+
+Reduces the lines of code from 320 lines to 12. 
+
+
+A DSL for HTTP
+An HTTP Gateway built on Node.js
+
+Acts as a middle ground 
+
+HTTP Crud to SQLish Crud
+
+Create a table for each resources
+select to read
+insert into to add or create
+update to update
+deleted to delete
+
+QL is an SQL like script
+
+-
+select long_url from bitly.shorten where  shortUrl = 'http://bit.ly/UZIvmy'
+
+
+Select URL from bing.soap.search where q= 'ql.io'
+
+Each sends back a JSON object with just what you need. 
+
+
+You can put a cache in front or cache behind it as you like. There is no caching with ql.io
+
+
+Trying to make it easy to read, something easy to write. Use a template to make the process easier. 
+
+Projecting the table to select the data that you want. 
+
+--- No Async Mind Bending
+
+Sequential
+
+Or Parallel 
+
+don't need to know async IO and  don't need to know dependencies. 
+
+
+npm install  ql.io-engine
+
+http://www.slideshare.net/sallamar/qlio-at-nodepdx
+http://t.co/dw4CbGxs
+
+-----
+
+iC: ql.io-engine unpacks latency by untangling http calls / @sallamarand @souders #2peasinapod / http://t.co/B3Bys6mX #nodepdx
+
+git clone git@github.com:ql-io/ql.io-site.git to see the scripts behind all the examples on this site.
+
+
+-----
+NODE! Huh! What else is it good for? 
+presented by Scott Koon
+@lazycoder
+
+ * Event driven SMTP server
+ * Concrete - http://github.com/ryankee/concrete - test Build integration system.  - Continuous integration system 
+ * Epub parser - http://github.com/andris9/epub
+ * Javascript build tool - http://github.com/mde/jake 
+ * MUD - github.com/shawncplus/ranviermud
+ * Node Inspector / Debugger - http://github.com/dannycoates/node-inspector
+ * SIGAR library for reporting - http://github.com/wdavidw/node-sigar
+ * Node widow manager for X11 - http://mixu/nwm
+
+
+Using a stiring hotplate connected to a node server to control by a cell phone
+
+Hooked a Kinect to node and generated a canvas element. 
+
+
+
+
+
+
