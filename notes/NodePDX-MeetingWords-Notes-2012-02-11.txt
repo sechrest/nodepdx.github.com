@@ -1,8 +1,9 @@
 Node PDX 2012
 Date: 2012/2/11
 http://nodepdx.github.com/
+http://lanyrd.com/2012/nodepdx/
 
-Saturday Morning. 
+Saturday Morning.  (Unfiltered) 
 
 Organizers: 
  * Troy Howard - welcome
@@ -10,12 +11,6 @@ Organizers:
 
 Live streaming at http://livestream.com/nodepdx
 Twitter hash is #nodepdx
-
-John Sechrest is telling us about this space to take notes on... (but if you see this, you already knew that!)
-
-
-Back again...
-
 
 NodeJS, CouchDB, Neo4j, Redis, Coffee script, buzzword Sectacular!
 
@@ -83,8 +78,6 @@ CoffeeScript
 Battle Plan 
 
  * Has a dataset of bands and memers of the band
- * 
-   * 
  * Transform data in Redis
    * Band: The Beattles => (set of members)
    * artist: The Beatles:John Lennon => (Set of roles)
@@ -188,7 +181,6 @@ Whenever you do a polyglot system, you always need a system that is the system o
 
 The goal for Redis it to support the autocomplete for the webpages. 
 The goal for Neo4js is to get easy access to relations
-
 
 Uses an template page for html pages. 
 
@@ -546,6 +538,526 @@ Hooked a Kinect to node and generated a canvas element.
 
 
 
+---------------------
+---------------------
 
+Day Two 
+NodePDX
+2012/02/12
+
+DAY 2from 9am to 6pmSunday 12th February 2012
+
+9:00am Meet n' Greet
+
+
+9:30am Day 2 Kickoff 
+Troy Howard and Adron Hall
+
+
+10:00am 
+Building a Real-time geolocation game with Geoloqi using Node.JS 
+Kyle Drake
+
+
+Building a realtime Geo-location game with GeoLoqi
+Kyle Drake  - @kyledrake
+
+http://geoloqi.com/iss  - Space station - Using Node + socket IO to do this. 
+
+Deals with Proximal notification.
+
+"Pop up a note at the grocery store - Hey don't forget the milk" when you go to the store
+
+Other uses of Geoloqi
+Spotsi is a company at PIEPDX, they are working on Discovering Tours
+
+"People go to Voodoo Doughnuts and think that is the only thing to do in Portland, but there is more"
+
+Map Attack - geolocation game
+
+You have to physically go to a specific place to get points 
+
+"When you play Map Attack, wear running shoes"
+
+adron: @kyledrake showing the @geoloqi International Space Station tracking. #nodepdx #nodejs http://t.co/rdSHySTZ
+
+
+Had problems when they got to 10 phones playing the game. 
+
+Server Issues:
+* Blocking IO
+* Lots of concurrent traffic
+* Not asynchronous
+
+Using: 
+Redis + geoloqi socketio + node.js + map attack server ( ngix+ruby ) 
+
+Use Redis as a pub/sub
+
+There is a persistant store that eventually gets all the information. 
+
+REDIS
+* Key Value Store
+* amazing implementation of pub/sub
+* so simple, you can actually understand it.
+
+SEE EXAMPLES
+
+Great for I have 5000 clients and they all need an update. 
+
+
+They use custom data over UDP for Node.js
+
+socket.io is awesome
+
+sock.js is a new package worth exploring and see if they did a step up from socket.io
+
+Message queues with Beanstalk
+
+Workers pick tasks off the stack
+
+Process data outside of the persistent store
+
+Simpler than AMQP
+
+
+The Reactor Pattern 
+
+The reactor design pattern is a concurrent programming pattern for handling service requests delivered concurrently to a service handler by one more inputs"
+
+Process the queue instead of blocking.
+
+Man epoll on linux 
+
+
+Concurrent IO is a common problem.
+
+Most languages have an implementation of the Reactor pattern 
+
+Javascript: node.js 
+python: twisted
+jruby: Native Threads
+
+Ruby does not block on IO if you are using threads, so it does not exactly get to a reactor pattern, but you can get close to the same style of programming. 
+
+But most people don't use ruby right and so they don't get the benefit. 
+
+Made sinatra::synchrony - Node without callbacks.
+Has since decided that people should not use this.  -> Do Not USE This. 
+
+Threads are the way to go with ruby or python, that is what it is designed for.
+
+But javascript is designed for the event loop. 
+
+Drunkenbicycle.html
+
+OH: "If you are missing some devs since last nights party, this is a way to find them"
+
+== Performances ==
+
+Database = your real persistence problem
+
+answer: make the relevant data ROFLscaling your persitent data
+
+Global write blocks is a problem on some new NoSQL systems.
+
+Cloud services are often not fast enough.
+
+Look at the Reddit state of the servers - Why Foursquare abandonded EBS. 
+Realhardware + postgres is a key to the solution.
+Bad sharding and memcache  was also the key to the root of the problem.
+
+
+Real Server
+Fusion IO
+
+Cost $100K
+Does 6 GB/s read
+Does 4 GB/s write
+
+The disk drive speed is critical to the process.
+!! Get drives that save the write cache when there is a power failure. 
+
+Look at the Intel 320 that does this right. 
+
+Long Term 
+Multi-master experiment (brewers Cap)
+Riak 
+Map Reduce does not work well as a database
+
+
+3 things that you trade off in databases. 
+
+Accessibility
+Consistance
+Partition tolerence
+
+Use the geoloqi api to make geolocation games.
+
+http://developers.geoloqi.com
+
+
+11:00am 
+BattleBots in the Clouds with Node.js 
+ Ken Robertson  - @krobertson
+
+
+From Cloud Foundry. - http://cloudfoundry.com/
+
+set up battlebots / Cell wars with Node - Setting up a series of applications cross connecting. Uses Reis to organize dashboard. 
+
+Paas.io as foundation. 
+
+
+@paas_io
+@invalidlogic
+http://nodepdx.paas.io
+
+ken@paas.io
+
+
+1:00pm 
+DRYing out your client-side apps 
+ Garann Means - @garannm 
+ 
+ From Texas. 
+ 
+ Don't Repeat Yourself - DRY
+ 
+ Node for Front End Developers - O'Reilly
+ 
+ garann@gmail.com 
+ 
+ 
+ How do we make resusable application coe
+ 
+ Client side strictly presentational
+ dhtml
+ ajax
+ explosing of JS libraries
+ client-side apps (real work being done on the browser)
+ 
+ Things that we can reuse:
+ * models
+ * views/templates
+ * route patterns
+ * external or third-party utilities. 
+ 
+ Caveats
+ * Only one way to import into node
+ * models have to check their context
+ * may need both sync or async
+ * User interaction has to be abstracted
+ * No global scope on server
+ 
+ The Whats
+ * Models are easy to share
+ * Templates - Not all templates work both clientside and serverside
+ * templates are used differently and loaded differently. 
+ * Routes : Generic Functions or Publish/subscribe as  structures
+ 
+ The Hows
+ * Files live on client
+ * pretend that you never heard of global scope
+ * everything decoupled from DOM
+ * pass reference to anything with state
+ 
+ Create Server-side dom
+ * exting tools to create dom in v8
+ * slow
+ * serverside Dom Rarely needed
+ * it becomes onerous
+ 
+ Organize materils at: 
+ http://toolbox.no.de/
+ 
+ Have our browsers acting more and more like servers. 
+ 
+ @garannm: If you attended or watched my DRY talk, <3z. Slides are up! http://t.co/R0S1wulG Video's up, too!http://t.co/1fAzuz6F
+ 
+2:00pm 
+Building Node.JS Applications on Windows Azure 
+Aaron
+
+Working to get node.js a first class citizen on Windows Azure
+
+MS thinks that Node.js is about the cross the chasm
+
+Working with Joyent ot make it windows compatable.
+
+Newest thing that they released is the ability to run mongodb replica set. 
+
+IIS node - Node inside IIS
+
+Azure is:
+* Azure compute
+* Azure storage - Blobs
+* Azure table storage - Key/value pairs
+* Azure queues - Durable queues. 
+* Service Bus - A push based queue system. + pub/sub
+* SQLizer - SQL as a service. 
+* App fabric cache
+* Access control service
+
+
+Code examples - 
+Uses Cloud9  for demo
+
+aaronontheweb/dpehelloworld
+http://cloud9ide.com/aaronontheweb ---> Behind firewall
+
+http://c9.io
+
+
+SEE EXAMPLE CODE
+
+Demo of A Table Query
+
+Demo of a large jquery tree view of a data store. 
+
+Stuffing Node into IIS. 
+github.com:/tjanczuk/iisnode/wiki
+
+The MS model seems like they keep wanting to do things for you. Make it simpler for people by doing things for them and removing options. 
+
+You can display the log directly in a browser request. 
+
+
+With a replica set, you must have 3 instances up at any given time.
+
+Showing all the code for the mongodb replica
+
+Consistancy in a replica set should happen in 1-2 seconds , if it takes longer, then it probably needs to be fixed. 
+
+There is a bizspark gets 3 years of azure. 
+
+Startups can get bizspark for free. 
+
+
+https://github.com/Aaronontheweb/httplogger
+
+
+http://github.com/bnoguchi/everyauth
+
+http://github.com/pekim/tedious
+
+
+3:00pm 
+Geddy - A better framework for building apps on node 
+Daniel Erickson - @TechWraith
+
+http://geddyjs.org
+
+Works at Yammer - https://www.yammer.com/
+
+Framework for the web on Node. 
+
+Have two services in Node: 
+
+Have a collaboration editng service. 
+
+After the prototype stage, you end up with spagetti
+
+Frameworks help you get rid of spagetti
+
+What is out there now as a framework
+* Ruby on Rails
+    Monlithic
+    convention over configuration
+* Django
+    Has modules
+    python
+    convention with configuration
+* Merb
+    Modularized Rails
+    
+For Node
+* Connect
+    gives middleware
+    problems with buffered requests which causes memory issues on scale
+    No structure 
+*  Express
+        Built on connect
+        Get routes, sinatra like 
+        No structure
+        No models
+        Express has all the problems of connect
+*  Flatiron
+        Developed by ninjitsu guys
+        supports modules
+        no structure
+
+*  Geddy 
+        Has structure
+        Authored by 
+ *         Matt Eernisse (highlife)
+ *         Mike Ihbe
+ *         Daniel Erickson 
+
+            Built in 2010
+            rebuilt over 2011 - refactored in the Fall 2011
+            
+            Geddy v2 released 
+Features
+*     Generators -  geddy app your-app
+*     Views
+*     Controllers
+*     Resources - geddy resource user
+*     Routes 
+*     Content negotiation - id + id.json
+*    Models - Model validation
+*    You can share the code on the front end and the back end
+*     Has bootstrap and jquery built in. 
+*     EJS templates (vs jade or handlebars) , easy to swap out
+*     Logging
+*     Metrics - instrument your code out of the box. (npm install metrics) 
+*     Buffered streams
+*     Process clustering
+
+1) Generate the app - 
+    /app
+    /app/controllers
+    /app/models
+    /app/views
+    /apps/views/layouts
+    /apps/views/main
+    /config
+    
+    
+    cd test_app
+    geddy
+    
+    http://localhost:4000
+    
+    npm install -g jake geddy
+    
+    fork on git hub at 
+    
+    http://github.com/mde/geddy
+    
+    TechWraith: My GeddyJS talk at #nodepdx was recorded, here's the link: http://t.co/OQ4PTShG
+    
+    
+
+
+
+4:00pm 
+Better Together: Building Scalable Real Time Collaborative Apps with Node.js
+Kav Latiolais  - @kavla
+
+
+LIFFFT
+
+
+Need to have a way for users to interact with the app when no-one else is around, then it is hard to get to critical mass. Make sure that single-user mode works. 
+
+Uses
+ * express
+ * backbone.js
+ * socket.io
+ * coffeescript
+
+
+Don't change your models on the client , ever. Let the server change the models.
+
+Model validation needs to happen at the node level. 
+
+How do you do MVC in this world
+- Controller on the server
+- View code on the client
+- Model is on both client and server, but only changes on the Server. 
+
+This does not work well for local cached data. 
+
+In this model, the master copy is on the server. 
+
+Time thru the server is under a second. 
+"if you do the code right"
+Even with thousands of users.
+
+Bringing people to collaborative experiences is a stone soup experience. 
+
+Janrain has a tool that gives a wider authentication tool. 
+https://github.com/janrain
+http://www.readwriteweb.com/hack/2010/08/quickly-enable-social-logins-w.php
+
+Backbone is not appropriate for lots of game sprints and keeping track of lots of objects in a game. 
+
+Collaborative editing is about the same as most multi-player games. 
+
+mobwrite is a good tool to look at for collaborative editing 
+http://code.google.com/p/google-mobwrite/
+
+Git hub project - grant ggodo - empty now, soon to be interesting 
+
+https://github.com/ggoodale
+
+
+
+
+
+
+
+
+
+---------
+Things we have talked about:
+
+Node.js - http://nodejs.org/
+
+express.js - http://expressjs.com/
+coffeescript.js - http://coffeescript.org/
+backbone.js - http://documentcloud.github.com/backbone/
+bricks.js - http://bricksjs.com
+marked          - https://github.com/chjj/marked
+mongoskin     - https://github.com/guileen/node-mongoskin
+etiquette.js - 
+traits.js
+
+
+Templating
+Handlebars - http://handlebarsjs.com/
+
+
+Database
+Redis - http://redis.io/
+Neo4j - http://neo4j.org/
+couchdb  - http://couchdb.apache.org/
+mongodb - http://www.mongodb.org/
+
+Gremlin  - https://github.com/tinkerpop/gremlin/wiki
+D3 - http://mbostock.github.com/d3/
+
+Toolbox - http://toolbox.no.de/
+
+Cloud9 - http://c9.io
+
+Geddy - http://geddyjs.org
+
+
+
+
+--------
+GIT NOTES
+
+
+Notes: Thinklikeagit
+Think-like-a-git.com 
+gitflow
+
+
+fork 
+clone 
+edit
+add
+commit
+push 
+push origin master
+
+
+Progit - read the first 4 chapters of that. 
+
+
+gitsquash
 
 
